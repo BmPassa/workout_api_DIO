@@ -2,6 +2,8 @@ from datetime import datetime
 from uuid import uuid4
 from fastapi import APIRouter, Body, HTTPException, status, FastAPI, Query
 from pydantic import UUID4
+from typing import List
+from pydantic import BaseModel
 
 from workout_api.atleta.schemas import AtletaIn, AtletaOut, AtletaUpdate
 from workout_api.atleta.models import AtletaModel
@@ -121,6 +123,20 @@ async def patch(id: UUID4, db_session: DatabaseDependency, atleta_up: AtletaUpda
 
     return atleta
 
+class AtletaResponse(BaseModel):
+    nome: str
+    centro_treinamento: str
+    categoria: str
+
+@app.get("/atletas/", response_model=List[AtletaResponse])
+def get_all_atletas():
+    # Simulando dados
+    atletas = [
+        {"nome": "Atleta 1", "centro_treinamento": "Centro 1", "categoria": "Categoria 1"},
+        {"nome": "Atleta 2", "centro_treinamento": "Centro 2", "categoria": "Categoria 2"}
+    ]
+    return atletas
+    
 app = FastAPI()
 
 @app.get("/atleta/")
