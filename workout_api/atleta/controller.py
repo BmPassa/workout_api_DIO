@@ -1,6 +1,6 @@
 from datetime import datetime
 from uuid import uuid4
-from fastapi import APIRouter, Body, HTTPException, status
+from fastapi import APIRouter, Body, HTTPException, status, FastAPI, Query
 from pydantic import UUID4
 
 from workout_api.atleta.schemas import AtletaIn, AtletaOut, AtletaUpdate
@@ -121,7 +121,12 @@ async def patch(id: UUID4, db_session: DatabaseDependency, atleta_up: AtletaUpda
 
     return atleta
 
+app = FastAPI()
 
+@app.get("/atleta/")
+def get_atleta(nome: str = Query(None), cpf: str = Query(None)):
+    return {"nome": nome, "cpf": cpf}
+    
 @router.delete(
     '/{id}', 
     summary='Deletar um Atleta pelo id',
